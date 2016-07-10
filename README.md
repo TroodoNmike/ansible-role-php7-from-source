@@ -8,6 +8,8 @@ This role is going to install php7 from source. You can also include PHP-FPM and
 
 Variables to overwrite can be found in /defaults/main.yml:
 
+Usually you just need this:
+
     php_install_version: "7.0.8"
 
 
@@ -32,6 +34,12 @@ And in vars/main.yml include:
     php_install_version: "7.0.8"
 
 When upgrading/downgrading simply change php_install_version value. For example from "7.0.7" to "7.0.8".
+
+Make a note that every time you compile php it takes significant amount of time. The benefit is that you control exactly what version of php is on the server and you can easily upgrade/downgrade.
+
+For faster compile times (where jobs=# is number of cpu cores used)
+
+    php_source_make_command: "make --jobs=4"
 
 Requirements
 ------------

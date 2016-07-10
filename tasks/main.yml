@@ -1,4 +1,25 @@
 ---
+- debug: msg="{{php_install_version}}"
+
+# no matter if php is installed or not we need to update php.ini provided
+- name: Ensure configuration directories exist.
+  file:
+    path: "{{ item }}"
+    state: directory
+    follow: true
+  with_flattened:
+    - "{{ php_conf_paths }}"
+
+- name: Add additional / overwrites configuration file in place.
+  template:
+    src: php.ini.j2
+    dest: "{{ php_conf_paths }}/extras.ini"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ php_conf_paths }}"
+
+
 # validate if php exists or version has changed
 - name: Validate installed version of php
   command: php -v
@@ -19,3 +40,6 @@
 
 - include: install-from-source.yml
   when: install_php == true
+
+
+
