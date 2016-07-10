@@ -1,7 +1,9 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+This role is going to install php7 from source.
+
+Runs well with ubuntu/trusty64
 
 Requirements
 ------------

@@ -1,2 +1,21 @@
 ---
-# tasks file for php7-from-source
+# validate if php exists or version has changed
+- name: Validate installed version of php
+  command: php -v
+  failed_when: false
+  changed_when: "php_installed_output.rc == 2"
+  register: php_installed_output
+
+# set if we need to install php
+- set_fact: install_php="{{ php_installed_output.changed == true }}"
+
+# when we know that php exists extract version
+- set_fact: php_string_version="{{ php_installed_output.stdout_lines is defined and php_installed_output.stdout_lines | first }}"
+  when: install_php == false
+
+# when we know that php exist check if version has changed
+- set_fact: install_php="{{ php_installed_output.stdout_lines is defined and php_string_version.find(php_install_version) == -1 }}"
+  when: install_php == false
+
+- include: install-from-source.yml
+  when: install_php == true
