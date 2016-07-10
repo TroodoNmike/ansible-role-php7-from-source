@@ -1,42 +1,47 @@
 php7-from-source
 =========
 
-This role is going to install php7 from source. You can also include PHP-FPM and OPCache as optional. When both are enabled performance is amazing.
+This role is going to install php7 from source. You can also include PHP-FPM and OPCache as optional. When both are enabled performance is amazing. When changing versions (upgrading/downgrading) it will recognize the change, download source code, recompile and deploy
 
-`   ansible-galaxy install TroodoNmike.php7-from-source
-`
+    ansible-galaxy install TroodoNmike.php7-from-source
+
 
 Variables to overwrite can be found in /defaults/main.yml:
 
-`   php_install_version: "7.0.8"
-`
+    php_install_version: "7.0.8"
 
-
-Runs well with ubuntu/trusty64
-
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
-
-Role Variables
---------------
-
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
     - hosts: servers
       roles:
          - { role: TroodoNmike.php7-from-source, php_install_version: "7.0.8" }
+
+Or:
+
+    - hosts: servers
+      vars_files:
+        - vars/main.yml
+      roles:
+         - { role: TroodoNmike.php7-from-source }
+
+And in vars/main.yml include:
+
+    php_install_version: "7.0.8"
+
+When upgrading/downgrading simply change php_install_version value. For example from "7.0.7" to "7.0.8".
+
+Requirements
+------------
+
+Runs well with ubuntu/trusty64
+
+Dependencies
+------------
+
+no dependencies
 
 License
 -------
