@@ -1,7 +1,10 @@
+---
+dependencies: []
+
 galaxy_info:
   author: Michal K
   description: PHP7 from source. Optional php7-fpm, opcache
-  company: na
+  company: NA
   license: license (GPLv2, CC-BY, etc)
   min_ansible_version: 1.2
   platforms:
@@ -16,4 +19,3 @@ galaxy_info:
     - debian
     - fpm
     - cli
-dependencies: []
