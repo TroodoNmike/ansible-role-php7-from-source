@@ -1,7 +1,16 @@
-Role Name
+php7-from-source
 =========
 
-This role is going to install php7 from source.
+This role is going to install php7 from source. You can also include PHP-FPM and OPCache as optional. When both are enabled performance is amazing.
+
+`   ansible-galaxy install TroodoNmike.php7-from-source
+`
+
+Variables to overwrite can be found in /defaults/main.yml:
+
+`   php_install_version: "7.0.8"
+`
+
 
 Runs well with ubuntu/trusty64
 
@@ -27,7 +36,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - { role: TroodoNmike.php7-from-source, php_install_version: "7.0.8" }
 
 License
 -------

@@ -1,17 +1,21 @@
 ---
-php_source_clone_dir: "~/php-src"
-php_source_install_path: "/opt/php"
+# this is git checkout version from source. Choose specific version like this "7.0.8" ("master" is not supported yet)
+php_install_version: "7.0.8"
 
-# choose specific version like this "php-7.0.8" or use master (the latest)
-php_source_version: "master"
+# this is git checkout version from source
+php_source_version:   "php-{{ php_install_version }}"
 
 # For faster compile time: "make --jobs=X" where X is # of cores present.
 php_source_make_command: "make"
+php_source_install_gmp_path: "/usr/include/x86_64-linux-gnu/gmp.h"
+
+php_source_clone_dir: "~/php-src"
+php_source_install_path: "/opt/php"
 
 php_source_configure_command: >
   ./configure
   --prefix={{ php_source_install_path }}
-  --with-config-file-path={{ php_conf_paths | first }}
+  --with-config-file-path=/etc/php7
   --enable-mbstring
   --enable-zip
   --enable-bcmath
