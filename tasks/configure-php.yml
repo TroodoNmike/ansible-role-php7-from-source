@@ -1,0 +1,15 @@
+# no matter if php is installed or not we need to update php.ini provided
+- name: Ensure configuration directories exist.
+  file:
+    path: "{{ item }}"
+    state: directory
+    follow: true
+  with_flattened:
+    - "{{ php_conf_paths }}"
+    - "{{ php_conf_paths_extensions }}"
+
+- name: Add additional / overwrites configuration file in place.
+  template: src={{ item.src }} dest={{item.dest}} owner=root group=root mode=0644
+  with_items:
+    - { src: "{{ role_path }}/templates/conf.d/extra.ini.j2", dest: "{{ php_conf_paths_extensions }}/extra.ini" }
+    - { src: "{{ role_path }}/templates/conf.d/opcache.ini.j2", dest: "{{ php_conf_paths_extensions }}/opcache.ini" }

@@ -1,24 +1,13 @@
 ---
-- debug: msg="{{php_install_version}}"
+- debug: msg="Version of PHP to be installed {{php_install_version}}"
 
-# no matter if php is installed or not we need to update php.ini provided
-- name: Ensure configuration directories exist.
-  file:
-    path: "{{ item }}"
-    state: directory
-    follow: true
-  with_flattened:
-    - "{{ php_conf_paths }}"
+# First configurations setup and apply any changes in the configs
+- name: Include php configuration settings
+  include: configure-php.yml
 
-- name: Add additional / overwrites configuration file in place.
-  template:
-    src: php.ini.j2
-    dest: "{{ php_conf_paths }}/extras.ini"
-    owner: root
-    group: root
-    mode: 0644
-  with_items: "{{ php_conf_paths }}"
-
+- name: Include fpm configurations
+  include: configure-php-fpm.yml
+  when: php_fpm_enable == true
 
 # validate if php exists or version has changed
 - name: Validate installed version of php
@@ -38,8 +27,7 @@
 - set_fact: install_php="{{ php_installed_output.stdout_lines is defined and php_string_version.find(php_install_version) == -1 }}"
   when: install_php == false
 
-- include: install-from-source.yml
-  when: install_php == true
-
+- include: "{{role_path}}/tasks/install-from-source/main.yml"
+  when: install_php == true or php_install_force == true
 
 

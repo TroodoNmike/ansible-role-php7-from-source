@@ -1,0 +1,22 @@
+---
+- name: Ensure php-fpm executable is symlinked into a standard path.
+  file:
+    src: "{{ php_source_install_path }}/sbin/php-fpm"
+    dest: /usr/sbin/php7-fpm
+    state: link
+  when: php_fpm_enable == true and php_compile_success|success
+
+- name: Ensure php-fpm init script is installed.
+  template:
+    src: init-php-fpm.j2
+    dest: "/etc/init.d/php7-fpm"
+    mode: 0755
+  when: php_fpm_enable == true and php_compile_success|success
+
+- name: Ensure php-fpm is started and enabled at boot (if configured).
+  service:
+    name: "php7-fpm"
+    state: started
+    enabled: yes
+  when: php_fpm_enable == true and php_compile_success|success
+

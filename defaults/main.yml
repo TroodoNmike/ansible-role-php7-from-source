@@ -2,6 +2,9 @@
 # this is git checkout version from source. Choose specific version like this "7.0.8" ("master" is not supported yet)
 php_install_version: "7.0.8"
 
+# make it true if you want to recompile every time you run it
+php_install_force: false
+
 # this is git checkout version from source
 php_source_version:   "php-{{ php_install_version }}"
 
@@ -10,6 +13,22 @@ php_source_install_path: "/opt/php"
 php_source_install_gmp_path: "/usr/include/x86_64-linux-gnu/gmp.h"
 
 php_conf_paths: "/etc/php7"
+php_conf_paths_extensions: "/etc/php7/conf.d"
+
+# PHP-FPM conf
+php_fpm_enable: true
+php_fpm_pool_conf_path: "/etc/php7/pool.d"
+
+php_fpm_pool_user:  www-data
+php_fpm_pool_group: www-data
+
+php_fpm_listen: "127.0.0.1:9000"
+php_fpm_listen_allowed_clients: "127.0.0.1"
+php_fpm_pm_max_children: 50
+php_fpm_pm_start_servers: 5
+php_fpm_pm_min_spare_servers: 5
+php_fpm_pm_max_spare_servers: 5
+
 
 # For faster compile time: "make --jobs=X" where X is # of cores present.
 php_source_make_command: "make"
@@ -18,7 +37,7 @@ php_source_configure_command: >
   ./configure
   --prefix={{ php_source_install_path }}
   --with-config-file-path={{ php_conf_paths }}
-  --with-config-file-scan-dir={{ php_conf_paths }}
+  --with-config-file-scan-dir={{ php_conf_paths_extensions }}
   --enable-mbstring
   --enable-zip
   --enable-bcmath
@@ -52,6 +71,9 @@ php_source_configure_command: >
   --with-bz2=/usr
   --with-recode=/usr
   --with-mysqli=/usr/bin/mysql_config
+  --with-fpm-user=www-data
+  --with-fpm-group=www-data
+  --enable-fpm
 
 
 # php.ini overwrites

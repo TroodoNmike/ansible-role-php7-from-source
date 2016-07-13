@@ -1,5 +1,4 @@
 ---
-
 - name: Include requirements
   include: "{{role_path}}/tasks/install-from-source/requirements.yml"
 
@@ -10,28 +9,24 @@
     version: "{{ php_source_version }}"
     accept_hostkey: yes
     depth: 1
-  when: install_php == true
+    force: yes
 
 - name: Ensure PHP installation path exists.
   file:
     path: "{{ php_source_install_path }}"
     state: directory
     mode: 0755
-  when: install_php == true
 
 - name: Check if gmp.h is already in a location accessible to gcc.
   stat: path=/usr/include/gmp.h
   register: gmp_file
-  when: install_php == true
 
 - name: Ensure gmp.h is symlinked into a location accessible to gcc.
   file:
     src: "{{ php_source_install_gmp_path }}"
     dest: /usr/include/gmp.h
     state: link
-  when: install_php == true and gmp_file.stat.exists == false
-
-
+  when: gmp_file.stat.exists == false
 
 # Compile below
 
@@ -39,13 +34,11 @@
   shell: >
     ./buildconf --force
     chdir={{ php_source_clone_dir }}
-  when: install_php == true
 
 - name: Run configure script.
   shell: >
     {{ php_source_configure_command }}
     chdir={{ php_source_clone_dir }}
-  when: install_php == true
 
 - name: Make and install PHP.
   shell: >
@@ -54,7 +47,6 @@
   with_items:
     - "{{ php_source_make_command }}"
     - make install
-  when: install_php == true
 
 - name: Ensure php executable is symlinked into a standard path.
   file:
@@ -64,9 +56,13 @@
   register: php_compile_success
 
 # Copy default production php.ini
+
 - name: Copy production php.ini
   command: cp {{ php_source_clone_dir }}/php.ini-production  {{ php_conf_paths }}/php.ini
   when: php_compile_success|success
 
+# FPM BELOW
 
-
+- name: Include php-fpm installation (if enabled)
+  include: "{{ role_path }}/tasks/install-from-source/php-fpm.yml"
+  when: php_fpm_enable == true and php_compile_success|success
