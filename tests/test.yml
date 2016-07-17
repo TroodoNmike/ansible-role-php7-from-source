@@ -2,5 +2,8 @@
 - hosts: localhost
   remote_user: root
 
+  roles:
+    - { role: ../../ansible-role-php7-from-source, sudo: yes }
+
   tasks:
     - debug: msg="test"
