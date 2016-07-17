@@ -5,5 +5,3 @@
   roles:
     - { role: ../../ansible-role-php7-from-source }
 
-  tasks:
-    - debug: msg="test"
