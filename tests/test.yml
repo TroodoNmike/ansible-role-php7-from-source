@@ -3,7 +3,7 @@
   remote_user: root
 
   roles:
-    - { role: ../../ansible-role-php7-from-source, sudo: yes }
+    - { role: ../../ansible-role-php7-from-source }
 
   tasks:
     - debug: msg="test"

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/TroodoNmike/ansible-role-php7-from-source.svg?branch=master)](https://travis-ci.org/TroodoNmike/ansible-role-php7-from-source)
+
 php7-from-source
 =========
 
