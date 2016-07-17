@@ -41,6 +41,11 @@ For faster compile times (where jobs=# is number of cpu cores used)
 
     php_source_make_command: "make --jobs=4"
 
+Sometimes when you work with remote servers via ssh if one task (compiling php) takes long time to complete you may lose ssh connection. In this case I suggest adding into ansible.cfg settings:
+
+    [ssh_connection]
+    ssh_args = -o ServerAliveInterval=100 -o ControlMaster=auto -o ControlPersist=10m
+
 Requirements
 ------------
 

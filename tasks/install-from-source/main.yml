@@ -47,13 +47,20 @@
   with_items:
     - "{{ php_source_make_command }}"
     - make install
+  # make sure you ssh can handle long tasks. It can take up some time
 
-- name: Ensure php executable is symlinked into a standard path.
+- name: Ensure php is executable (symlink)
   file:
     src: "{{ php_source_install_path }}/bin/php"
     dest: /usr/bin/php
     state: link
   register: php_compile_success
+
+- name: Ensure phpize is executable (symlink)
+  file:
+    src: "{{ php_source_install_path }}/bin/phpize"
+    dest: /usr/bin/phpize
+    state: link
 
 # Copy default production php.ini
 

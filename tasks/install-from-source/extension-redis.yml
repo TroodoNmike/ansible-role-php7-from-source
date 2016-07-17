@@ -1,0 +1,43 @@
+---
+# task to check if module already installed...
+
+- name: Check if php redis extension is already installed
+  shell: /usr/bin/php -m | grep redis
+  changed_when: "php_installed_output.rc == 2"
+  ignore_errors: true
+  register: redis_extension_installed_grep
+
+- name: Evaluate grep
+  set_fact: redis_extension_installed="{{ redis_extension_installed_grep.stdout == 'redis' }}"
+
+- name: Clone the PHP Redis extension from GIT repository.
+  git:
+    repo: https://github.com/phpredis/phpredis.git
+    dest: "{{ php_extension_redis_install_path }}"
+    version: "php7"
+    accept_hostkey: yes
+    depth: 1
+  when: redis_extension_installed == false or php_extension_redis_recompile == true
+
+- name: Run phpize on repo
+  shell: >
+    phpize
+    chdir={{ php_extension_redis_install_path }}
+  when: redis_extension_installed == false or php_extension_redis_recompile == true
+
+- name: Run configure, make and install for PHP redis.
+  shell: >
+    {{ item }}
+    chdir={{ php_extension_redis_install_path }}
+  with_items:
+    - ./configure --with-php-config="{{ php_source_install_path }}/bin/php-config"
+    - make
+    - make install
+  when: redis_extension_installed == false or php_extension_redis_recompile == true
+  register: redis_extension_installed
+
+- name: Add php redis extension
+  template: src={{ item.src }} dest={{item.dest}} owner=root group=root mode=0644
+  with_items:
+    - { src: "{{ role_path }}/templates/conf.d/redis.ini.j2", dest: "{{ php_conf_paths_extensions }}/redis.ini" }
+  when: redis_extension_installed|success

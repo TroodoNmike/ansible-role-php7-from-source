@@ -29,6 +29,11 @@ php_fpm_pm_start_servers: 5
 php_fpm_pm_min_spare_servers: 5
 php_fpm_pm_max_spare_servers: 5
 
+# enable/disable extensions
+php_extension_redis: false
+php_extension_redis_install_path: "/opt/php-redis"
+php_extension_redis_git_branch: "/opt/php-redis"
+php_extension_redis_recompile: false # if true it will recompile every time it runs
 
 # For faster compile time: "make --jobs=X" where X is # of cores present.
 php_source_make_command: "make"

@@ -30,4 +30,6 @@
 - include: "{{role_path}}/tasks/install-from-source/main.yml"
   when: install_php == true or php_install_force == true
 
+- include: "{{role_path}}/tasks/install-from-source/extension-redis.yml"
+  when: php_extension_redis == true
 
